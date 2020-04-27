@@ -1,5 +1,5 @@
 import unittest
-from cipher import Caesar
+from cipher import Caesar, Rot13, Vigenere
 
 
 class TestCipherMixin:
@@ -21,13 +21,30 @@ class TestCipherMixin:
         self.assertEqual(decoded, self.text)  # Раскодированный шифр совпадает с исходным текстом
 
 
-class TestCipher(TestCipherMixin, unittest.TestCase):
+class TestCaesar(TestCipherMixin, unittest.TestCase):
     def encode(self, text):
         return Caesar.encode(text, 5)
 
     def decode(self, code):
         return Caesar.decode(code, 5)
 
+
+class TestRot13(TestCipherMixin, unittest.TestCase):
+    def encode(self, text):
+        return Rot13.encode(text)
+
+    def decode(self, code):
+        return Rot13.decode(code)
+
+class TestVigenere(unittest.TestCase):
+    text = 'the five boxing wizards jump quickly'
+    key = 'helloworld'
+
+    def encode(self, text):
+        return Vigenere.encode(self.text, self.key)
+
+    def decode(self, code):
+        return Vigenere.decode(self.text, self.key)
 
 if __name__ == '__main__':
     unittest.main()
