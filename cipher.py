@@ -1,9 +1,12 @@
+from itertools import cycle
+
+
 class Cipher:
     alpha = 'abcdefghijklmnopqrstuvwxyz'
 
     @classmethod
     def get_char(cls, n):
-        return cls.alpha[n % 26]
+        return cls.alpha[n % len(cls.alpha)]
 
 
 class Caesar(Cipher):
@@ -25,3 +28,24 @@ class Rot13:
     @classmethod
     def decode(cls, text):
         return cls.encode(text)
+
+
+class Vigenere(Cipher):
+    @classmethod
+    def __process(cls, text, key, fn):
+        result = []
+        for a, b in zip(text, cycle(key)):
+            if a in cls.alpha:
+                index = fn(cls.alpha.index(a), cls.alpha.index(b))
+                result += cls.get_char(index)
+            else:
+                result += a
+        return ''.join(result)
+
+    @classmethod
+    def decode(cls, text, key):
+        return cls.__process(text, key, lambda x, y: x - y)
+
+    @classmethod
+    def encode(cls, text, key):
+        return cls.__process(text, key, lambda x, y: x + y)
